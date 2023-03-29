@@ -1,5 +1,6 @@
 export default {
   LOADING: 'loading',
+
   LOGIN: 'Login',
   REGISTER: 'Register',
 
