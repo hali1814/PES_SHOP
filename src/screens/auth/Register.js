@@ -1,14 +1,23 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import React from 'react';
+import HeaderComponent from '../../components/HeaderComponent';
+import { Colors } from '../../constants/colors';
 
-const Register = () => {
+const Register = ({ navigation }) => {
   return (
-    <View>
-      <Text>Register</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <HeaderComponent title={'Đăng ký'} navigation={navigation} />
+    </SafeAreaView>
   );
 };
 
 export default Register;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 20,
+    backgroundColor: Colors.WHITE,
+    paddingHorizontal: 20
+  },
+});
