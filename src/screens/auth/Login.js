@@ -7,10 +7,53 @@ import { Colors } from '../../constants/colors';
 import { ROUTES } from '../../constants';
 import { UserContext } from '../../api/authAPI/UserContext';
 import Icon from 'react-native-vector-icons/Ionicons'
+import { Notifier, NotifierComponents } from 'react-native-notifier';
 
 const Login = props => {
   const { navigation } = props;
-  const { onLogin, isLoggined, setIsLoggined } = useContext(UserContext)
+  const [username, setUsername] = useState('0918865377')
+  const [password, setPassword] = useState('hunglong0209')
+  const { onLogin } = useContext(UserContext)
+
+  const loginFailDialog = () => {
+    Notifier.showNotification({
+      title: 'Đăng nhập thất bại',
+      description: 'Bạn đã nhập sai số điện thoại hoặc mật khẩu !',
+      Component: NotifierComponents.Alert,
+      componentProps: {
+        alertType: 'error',
+      },
+    });
+  }
+
+  const loginSuccessDialog = () => {
+    Notifier.showNotification({
+      title: 'Đăng nhập thành công',
+      description: 'Chào mừng đến PES SHOP !',
+      Component: NotifierComponents.Alert,
+      componentProps: {
+        alertType: 'success',
+      },
+    });
+  }
+
+  const login = async () => {
+    try {
+      const res = await onLogin(username, password)
+      console.log('username, password >>> ', username, password)
+      console.log('Login resulttt >>> ', res)
+      if (res == true) {
+        loginSuccessDialog()
+      } else {
+        loginFailDialog()
+      }
+    } catch (error) {
+      console.log('Login failed >>> ', error)
+      throw error
+    }
+
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,6 +83,8 @@ const Login = props => {
             placeholder='Nhập số điện thoại'
             style={{ marginLeft: 10 }}
             keyboardType='number-pad'
+            value={username}
+            onChangeText={text => { setUsername(text) }}
           />
         </View>
         <View style={styles.inputPasswordContainer}>
@@ -47,6 +92,9 @@ const Login = props => {
             placeholder='Nhập mật khẩu'
             style={{ marginLeft: 10 }}
             keyboardType='default'
+            secureTextEntry={true}
+            value={password}
+            onChangeText={text => { setPassword(text) }}
           />
         </View>
       </View>
@@ -76,7 +124,7 @@ const Login = props => {
           <Text style={{ fontSize: 16, color: Colors.BLUE }}>Đăng ký tài khoản mới</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => { setIsLoggined(true) }}
+          onPress={login}
           style={styles.loginButton}
         >
           <Text style={{ fontSize: 16, color: Colors.WHITE }}>Tiếp</Text>
