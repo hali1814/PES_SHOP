@@ -4,7 +4,8 @@ export default {
   LOGIN: 'Login',
   REGISTER: 'Register',
 
-  HOME: 'Home',
+  HOME: 'MyTab',
   HOME_TAB: 'Home Tab',
   NOTIFICATIONS: 'Notifications',
+
 };

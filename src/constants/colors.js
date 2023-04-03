@@ -6,4 +6,5 @@ export const Colors = {
   BACKGROUND_ITEM: '#F0F2F5',
   BLACK: '#000000',
   WHITE: '#FFFFFF',
+  BLUE: '#3F51B5'
 };
