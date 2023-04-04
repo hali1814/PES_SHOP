@@ -7,5 +7,6 @@ export default {
   HOME: 'MyTab',
   HOME_TAB: 'Home Tab',
   NOTIFICATIONS: 'Notifications',
+  OTP: 'OTP Screen',
 
 };

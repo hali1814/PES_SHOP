@@ -6,3 +6,13 @@ export const Login = async (userName, password) => {
     const result = await customAxios().post('/api/pes_store/login', data)
     return result
 }
+
+export const register = async (userName, password, avatar, address, nameShop, email, description) => {
+    const data = {
+        userName: userName, password: password, avatar: avatar,
+        address: address, nameShop: nameShop,
+        email: email, description: description
+    }
+    const result = await customAxios().post('/api/pes_store/register', data)
+    return result
+}

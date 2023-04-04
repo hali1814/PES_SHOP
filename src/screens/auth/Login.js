@@ -13,12 +13,12 @@ const Login = props => {
   const { navigation } = props;
   const [username, setUsername] = useState('0918865377')
   const [password, setPassword] = useState('hunglong0209')
-  const { onLogin } = useContext(UserContext)
+  const { onLogin, loginMsg } = useContext(UserContext)
 
   const loginFailDialog = () => {
     Notifier.showNotification({
       title: 'Đăng nhập thất bại',
-      description: 'Bạn đã nhập sai số điện thoại hoặc mật khẩu !',
+      description: loginMsg,
       Component: NotifierComponents.Alert,
       componentProps: {
         alertType: 'error',
@@ -29,7 +29,6 @@ const Login = props => {
   const loginSuccessDialog = () => {
     Notifier.showNotification({
       title: 'Đăng nhập thành công',
-      description: 'Chào mừng đến PES SHOP !',
       Component: NotifierComponents.Alert,
       componentProps: {
         alertType: 'success',
@@ -44,8 +43,13 @@ const Login = props => {
       console.log('Login resulttt >>> ', res)
       if (res == true) {
         loginSuccessDialog()
-      } else {
+      } else if (loginMsg == 'Your account is inactive !!') {
         loginFailDialog()
+        navigation.navigate(ROUTES.OTP)
+      }
+      else {
+        loginFailDialog()
+
       }
     } catch (error) {
       console.log('Login failed >>> ', error)

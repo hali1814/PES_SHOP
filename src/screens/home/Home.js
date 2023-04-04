@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import {Colors} from '../../constants/colors';
-import {icons, images} from '../../assets';
-import {formatPrice} from '../../utils/MoneyFormat';
+import { Colors } from '../../constants/colors';
+import { icons, images } from '../../assets';
+import { formatPrice } from '../../utils/MoneyFormat';
 
 const DATA = [
   {
@@ -94,14 +94,14 @@ const numColumns = 2;
 
 const Home = () => {
   // RenderItems FlatList
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.ContainerFlatList}>
       <View style={styles.CustomImgItem}>
         <Image source={item.images} style={styles.styleImg} />
       </View>
-      <View style={{position: 'absolute'}}>
+      <View style={{ position: 'absolute' }}>
         <View style={styles.CustomSale}>
-          <Image source={icons.icon_TagSale} style={{width: 16, height: 16}} />
+          <Image source={icons.icon_TagSale} style={{ width: 16, height: 16 }} />
           <Text style={styles.TextSale}>{item.sale}</Text>
         </View>
       </View>
@@ -120,40 +120,40 @@ const Home = () => {
   );
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <StatusBar hidden={true} />
-      <ImageBackground source={images.img_Background} style={{height: 278}} />
+      <ImageBackground source={images.img_Background} style={{ height: 278 }} />
       <View style={styles.ContainerBackground}>
         <View style={styles.CustomViewShop}>
           <View style={styles.CustomViewNameShop}>
             <Text style={styles.TextNameShop}>{'Vua Hàng Hiệu'}</Text>
             <Image
               source={icons.icon_Crown}
-              style={{marginLeft: 4, width: 20, height: 20}}
+              style={{ marginLeft: 4, width: 20, height: 20 }}
             />
           </View>
           <Text style={styles.TextMailShop}>{'vuahanghieu@gmail.com'}</Text>
           <View style={styles.CustomCurrency}>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Text style={styles.Number}>{'886'}</Text>
               <Text style={styles.TextCurrencyShop}>{'Đã bán'}</Text>
             </View>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Text style={styles.Number}>{'12,233'}</Text>
               <Text style={styles.TextCurrencyShop}>{'Thích'}</Text>
             </View>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Text style={styles.Number}>{'4.5'}</Text>
               <Text style={styles.TextCurrencyShop}>{'Đánh giá'}</Text>
             </View>
           </View>
         </View>
         <View style={styles.CustomImgUser}>
-          <Image source={images.img_User} style={{height: 80, width: 80}} />
+          <Image source={images.img_User} style={{ height: 80, width: 80 }} />
         </View>
       </View>
       {/* FlatListView */}
-      <View style={{paddingHorizontal: 12, marginTop: 12}}>
+      <View style={{ paddingHorizontal: 12, marginTop: 12, height: '100%' }}>
         <FlatList
           showsVerticalScrollIndicator={false}
           data={DATA}
