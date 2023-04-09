@@ -1,15 +1,15 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Loading, Notifications } from '../screens';
-import { ROUTES } from '../constants';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {AddProducts, Home, Loading, Notifications} from '../screens';
+import {ROUTES} from '../constants';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Colors } from '../constants/colors';
-import { createStackNavigator } from '@react-navigation/stack';
+import {Colors} from '../constants/colors';
+import {createStackNavigator} from '@react-navigation/stack';
 import AppLoading from '../screens/Loading/AppLoading';
 
 const Tab = createBottomTabNavigator();
 
-const appStack = createStackNavigator()
+const appStack = createStackNavigator();
 
 const AppStackScreen = () => {
   return (
@@ -23,7 +23,6 @@ const AppStackScreen = () => {
       }}>
       <appStack.Screen name="AppLoading" component={AppLoading} />
       <appStack.Screen name="MyTab" component={BottomTabNavigator} />
-
     </appStack.Navigator>
   );
 };
@@ -31,11 +30,11 @@ const AppStackScreen = () => {
 function BottomTabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={({route}) => ({
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.MAIN,
-        tabBarIcon: ({ color, focused }) => {
+        tabBarIcon: ({color, focused}) => {
           let iconName;
           if (route.name === ROUTES.HOME_TAB) {
             iconName = focused ? 'ios-home' : 'ios-home-outline';
@@ -48,11 +47,11 @@ function BottomTabNavigator() {
         },
       })}>
       <Tab.Screen
-        options={{ tabBarLabel: 'Home' }}
+        options={{tabBarLabel: 'Home'}}
         name={ROUTES.HOME_TAB}
         component={Home}
       />
-      <Tab.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
+      <Tab.Screen name={ROUTES.NOTIFICATIONS} component={AddProducts} />
     </Tab.Navigator>
   );
 }

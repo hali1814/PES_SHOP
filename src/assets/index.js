@@ -2,6 +2,7 @@ const icons = {
   icon_LOGO: require('../assets/icons/Logo.png'),
   icon_Crown: require('../assets/icons/Crown.png'),
   icon_TagSale: require('../assets/icons/Tag.png'),
+  icon_ADDImage: require('../assets/icons/AddImg.png'),
 };
 
 const images = {
