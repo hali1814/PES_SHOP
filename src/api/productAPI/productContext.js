@@ -1,6 +1,7 @@
 import {
     getStore,
-    getALlGenres
+    getALlGenres,
+    upload
 } from "./productService";
 
 import React, { createContext, useState } from "react";
@@ -35,6 +36,19 @@ export const ProductContextProvider = (props) => {
             console.log('onGetAllGenres error: ' + error)
             throw error
         }
+    }
+
+    const onUpload = async image => {
+        try {
+            const res = await upload(image)
+            if (res.status == 'success') {
+                return res.data
+            }
+        } catch (error) {
+            console.log('onUpload error: ' + error)
+            throw error
+        }
+        return null
     }
 
     return (

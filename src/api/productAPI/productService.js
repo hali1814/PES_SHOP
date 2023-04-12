@@ -9,3 +9,11 @@ export const getALlGenres = async () => {
     const res = await customAxios().get('/api/genres/all')
     return res
 }
+
+export const upload = async data => {
+    const result = await customAxios('multipart/form-data').post(
+        '/api/upLoadMany',
+        data,
+    );
+    return result;
+};

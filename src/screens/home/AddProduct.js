@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Image, FlatList } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import { Colors } from '../../constants/colors'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Picker } from '@react-native-picker/picker'
 import { ProductContext } from '../../api/productAPI/productContext'
+import ImagePicker from 'react-native-image-crop-picker'
 
 const AddProduct = () => {
     const { onGetAllGenres } = useContext(ProductContext)
@@ -16,22 +17,54 @@ const AddProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedSize, setSelectedSize] = useState(sizes[0])
     const [selectedColor, setSelectedColor] = useState(colors[0])
+    const [images, setImages] = useState([])
 
+    const selectImage = async () => {
+        try {
+            const res = await ImagePicker.openPicker({
+                mediaType: 'photo',
+                multiple: true,
+            })
+            setImages([...images,
+            res.map((image) => ({ uri: image.path, type: image.mime, name: 'image' }))
+            ])
+            console.log('link hinh ne : ', res)
+            console.log('tong so luong hinh ne : ', images)
+        } catch (error) {
+            console.error('open image failed', error)
+            throw error
+        }
+    }
+
+
+    const renderItem = ({ item }) => {
+        (
+            <Image style={styles.img} source={{ uri: item.uri }} />
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <Image style={styles.bgImg} source={require('../../assets/images/backgroundImage2.jpg')} />
-            <TouchableOpacity style={styles.addImageButton}>
+            <TouchableOpacity
+                onPress={selectImage}
+                style={styles.addImageButton}
+            >
                 <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
                 <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Chọn ảnh</Text>
             </TouchableOpacity>
             <View style={{ height: 200 }}>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Image style={styles.img} source={require('../../assets/images/Item.png')} />
                     <Image style={styles.img} source={require('../../assets/images/Item.png')} />
                     <Image style={styles.img} source={require('../../assets/images/Item.png')} />
                     <Image style={styles.img} source={require('../../assets/images/Item.png')} />
-                </ScrollView>
+                </ScrollView> */}
+                <FlatList
+                    data={images}
+                    renderItem={renderItem}
+                    horizontal={true}
+                />
             </View>
             <Text style={styles.title}>Chọn loại, size và màu sản phẩm</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

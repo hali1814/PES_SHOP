@@ -9,5 +9,7 @@ export default {
   NOTIFICATIONS: 'Notifications',
   OTP: 'OTP Screen',
   ADD_PRODUCT: 'ADD_PRODUCT',
-
+  AWAITING: 'AWAITING',
+  CANCELED: 'CANCELED',
+  ORDER_TAB: 'ORDER_TAB',
 };
