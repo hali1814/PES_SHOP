@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Loading, Notifications } from '../screens';
+import { Home, Loading, Notifications, AddProduct } from '../screens';
 import { ROUTES } from '../constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../constants/colors';
@@ -23,7 +23,6 @@ const AppStackScreen = () => {
       }}>
       <appStack.Screen name="AppLoading" component={AppLoading} />
       <appStack.Screen name="MyTab" component={BottomTabNavigator} />
-
     </appStack.Navigator>
   );
 };
@@ -43,6 +42,11 @@ function BottomTabNavigator() {
               ? 'ios-notifications'
               : 'ios-notifications-outline';
           }
+          else if (route.name === ROUTES.ADD_PRODUCT) {
+            iconName = focused
+              ? 'add-circle'
+              : 'add-circle-outline';
+          }
           return <Icon name={iconName} size={25} color={color} />;
         },
         tabBarStyle: { height: 50 }
@@ -51,6 +55,11 @@ function BottomTabNavigator() {
         options={{ tabBarLabel: 'Trang chủ' }}
         name={ROUTES.HOME_TAB}
         component={Home}
+      />
+      <Tab.Screen
+        options={{ tabBarLabel: 'Thêm' }}
+        name={ROUTES.ADD_PRODUCT}
+        component={AddProduct}
       />
       <Tab.Screen
         options={{ tabBarLabel: 'Thông báo' }}

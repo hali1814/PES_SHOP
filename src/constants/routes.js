@@ -8,5 +8,6 @@ export default {
   HOME_TAB: 'Home Tab',
   NOTIFICATIONS: 'Notifications',
   OTP: 'OTP Screen',
+  ADD_PRODUCT: 'ADD_PRODUCT',
 
 };

@@ -102,7 +102,7 @@ const Home = () => {
   const [products, setProducts] = useState([])
   const [sold, setSold] = useState()
 
-  const { onGetStore } = useContext(ProductContext)
+  const { onGetStore, isLoading } = useContext(ProductContext)
   useEffect(() => {
     getStore()
   }, [])
@@ -121,7 +121,16 @@ const Home = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.ContainerFlatList}>
       <View style={styles.CustomImgItem}>
-        <Image source={{ uri: item.images[0] }} style={styles.styleImg} />
+        {
+          isLoading
+            ? (<ActivityIndicator size='large' color={Colors.MAIN} />)
+            : (
+              <Image
+                source={item.images[0] ? { uri: item.images[0] } : require('../../assets/images/Item.png')}
+                style={styles.styleImg}
+              />
+            )
+        }
       </View>
       <View style={{ position: 'absolute' }}>
         <View style={styles.CustomSale}>
@@ -137,7 +146,7 @@ const Home = () => {
           {item.description}
         </Text>
         <Text numberOfLines={1} style={styles.price}>
-          {item.stock[0].price}đ
+          {formatPrice(item.stock[0].price)}
         </Text>
       </View>
     </TouchableOpacity>
@@ -173,7 +182,16 @@ const Home = () => {
           </View>
         </View>
         <View style={styles.CustomImgUser}>
-          <Image source={{ uri: avatar }} style={{ height: 80, width: 80, borderRadius: 360 }} />
+          {
+            isLoading
+              ? (<ActivityIndicator size='large' color={Colors.MAIN} />)
+              : (
+                <Image
+                  source={avatar ? { uri: avatar } : require('../../assets/images/User.png')}
+                  style={{ height: 80, width: 80, borderRadius: 360 }}
+                />
+              )
+          }
         </View>
       </View>
       {/* FlatListView */}
