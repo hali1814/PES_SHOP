@@ -8,12 +8,14 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Colors } from '../../constants/colors';
 import { icons, images } from '../../assets';
 import { formatPrice } from '../../utils/MoneyFormat';
+import { ProductContext } from '../../api/productAPI/productContext';
 
 const DATA = [
   {
@@ -93,27 +95,49 @@ const DATA = [
 const numColumns = 2;
 
 const Home = () => {
+
+  const [email, setEmail] = useState('')
+  const [nameShop, setNameShop] = useState('')
+  const [avatar, setAvatar] = useState('')
+  const [products, setProducts] = useState([])
+  const [sold, setSold] = useState()
+
+  const { onGetStore } = useContext(ProductContext)
+  useEffect(() => {
+    getStore()
+  }, [])
+
+  const getStore = async () => {
+    const res = await onGetStore()
+    setEmail(res.email)
+    setNameShop(res.nameShop)
+    setAvatar(res.avatar)
+    setProducts(res.products)
+    setSold(res.sold)
+  }
+
+
   // RenderItems FlatList
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.ContainerFlatList}>
       <View style={styles.CustomImgItem}>
-        <Image source={item.images} style={styles.styleImg} />
+        <Image source={{ uri: item.images[0] }} style={styles.styleImg} />
       </View>
       <View style={{ position: 'absolute' }}>
         <View style={styles.CustomSale}>
           <Image source={icons.icon_TagSale} style={{ width: 16, height: 16 }} />
-          <Text style={styles.TextSale}>{item.sale}</Text>
+          <Text style={styles.TextSale}>{item.sale}%</Text>
         </View>
       </View>
       <View style={styles.ViewTextFL}>
         <Text numberOfLines={1} style={styles.title}>
-          {item.title}
+          {item.name}
         </Text>
         <Text numberOfLines={2} style={styles.describe}>
-          {item.describe}
+          {item.description}
         </Text>
         <Text numberOfLines={1} style={styles.price}>
-          {item.price}đ
+          {item.stock[0].price}đ
         </Text>
       </View>
     </TouchableOpacity>
@@ -121,21 +145,21 @@ const Home = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar hidden={true} />
+      <StatusBar barStyle='dark-content' backgroundColor={Colors.MAIN} />
       <ImageBackground source={images.img_Background} style={{ height: 278 }} />
       <View style={styles.ContainerBackground}>
         <View style={styles.CustomViewShop}>
           <View style={styles.CustomViewNameShop}>
-            <Text style={styles.TextNameShop}>{'Vua Hàng Hiệu'}</Text>
+            <Text style={styles.TextNameShop}>{nameShop}</Text>
             <Image
               source={icons.icon_Crown}
               style={{ marginLeft: 4, width: 20, height: 20 }}
             />
           </View>
-          <Text style={styles.TextMailShop}>{'vuahanghieu@gmail.com'}</Text>
+          <Text style={styles.TextMailShop}>{email}</Text>
           <View style={styles.CustomCurrency}>
             <View style={{ alignItems: 'center' }}>
-              <Text style={styles.Number}>{'886'}</Text>
+              <Text style={styles.Number}>{sold ? sold : 0}</Text>
               <Text style={styles.TextCurrencyShop}>{'Đã bán'}</Text>
             </View>
             <View style={{ alignItems: 'center' }}>
@@ -149,16 +173,16 @@ const Home = () => {
           </View>
         </View>
         <View style={styles.CustomImgUser}>
-          <Image source={images.img_User} style={{ height: 80, width: 80 }} />
+          <Image source={{ uri: avatar }} style={{ height: 80, width: 80, borderRadius: 360 }} />
         </View>
       </View>
       {/* FlatListView */}
       <View style={{ paddingHorizontal: 12, marginTop: 12, height: '100%' }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={DATA}
+          data={products}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           numColumns={numColumns}
           contentContainerStyle={styles.container}
         />
@@ -222,6 +246,14 @@ const styles = StyleSheet.create({
     margin: 4,
     borderRadius: 4,
     flexDirection: 'column',
+    shadowColor: 'gray',
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
   ContainerBackground: {
     height: 278,

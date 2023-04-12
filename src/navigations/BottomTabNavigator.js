@@ -33,7 +33,6 @@ function BottomTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.MAIN,
         tabBarIcon: ({ color, focused }) => {
           let iconName;
@@ -44,15 +43,20 @@ function BottomTabNavigator() {
               ? 'ios-notifications'
               : 'ios-notifications-outline';
           }
-          return <Icon name={iconName} size={22} color={color} />;
+          return <Icon name={iconName} size={25} color={color} />;
         },
+        tabBarStyle: { height: 50 }
       })}>
       <Tab.Screen
-        options={{ tabBarLabel: 'Home' }}
+        options={{ tabBarLabel: 'Trang chủ' }}
         name={ROUTES.HOME_TAB}
         component={Home}
       />
-      <Tab.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
+      <Tab.Screen
+        options={{ tabBarLabel: 'Thông báo' }}
+        name={ROUTES.NOTIFICATIONS}
+        component={Notifications}
+      />
     </Tab.Navigator>
   );
 }
