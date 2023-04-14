@@ -11,6 +11,7 @@ export const getALlGenres = async () => {
 }
 
 export const upload = async data => {
+    console.log('dataaa', data)
     const result = await customAxios('multipart/form-data').post(
         '/api/upLoadMany',
         data,

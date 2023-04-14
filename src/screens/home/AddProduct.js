@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Image, FlatList } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Colors } from '../../constants/colors'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Picker } from '@react-native-picker/picker'
@@ -7,7 +7,7 @@ import { ProductContext } from '../../api/productAPI/productContext'
 import ImagePicker from 'react-native-image-crop-picker'
 
 const AddProduct = () => {
-    const { onGetAllGenres } = useContext(ProductContext)
+    const { onGetAllGenres, onUpload } = useContext(ProductContext)
     useEffect(() => {
         // onGetAllGenres()
     }, [])
@@ -17,28 +17,60 @@ const AddProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedSize, setSelectedSize] = useState(sizes[0])
     const [selectedColor, setSelectedColor] = useState(colors[0])
+    const [imageLoading, setImageLoading] = useState(false)
     const [images, setImages] = useState([])
+    const imagesRef = useRef()
 
-    const selectImage = async () => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const selectImages = async () => {
+        setImageLoading(true);
         try {
-            const res = await ImagePicker.openPicker({
-                mediaType: 'photo',
+            const selectedImages = await ImagePicker.openPicker({
                 multiple: true,
-            })
-            setImages([...images,
-            res.map((image) => ({ uri: image.path, type: image.mime, name: 'image' }))
-            ])
-            console.log('link hinh ne : ', res)
-            console.log('tong so luong hinh ne : ', images)
+                mediaType: 'photo',
+            });
+            setImageLoading(false);
+            console.log('hinh ban dau ', selectedImages)
+            // const filename = selectedImages[0]?.path.substring(selectedImages[0]?.path.lastIndexOf("/") + 1);
+            const newImages = selectedImages.map(image => ({
+                uri: image.path,
+                name: image.path.substring(image.path.lastIndexOf("/") + 1),
+                type: image.mime,
+            }));
+            setImages(newImages);
+            // console.log('cat chuoi ', filename)
         } catch (error) {
-            console.error('open image failed', error)
-            throw error
+            console.error('open image failed', error);
+            setImageLoading(false);
+            throw error;
         }
     }
 
+    useEffect(() => {
+        console.log('hinh day ne : ', images);
+    }, [images]);
+
+    const uploadImages = async () => {
+        try {
+            const formData = new FormData();
+            images.forEach((image, index) => {
+                formData.append(`images`, image);
+                console.log('images 0 ', images[0])
+                formData.append(`images`,
+                    images[0]
+                );
+            });
+            const response = await onUpload(formData)
+            console.log('resss', response);
+        } catch (error) {
+            console.log(error.toString());
+        }
+    };
+
 
     const renderItem = ({ item }) => {
-        (
+        return (
             <Image style={styles.img} source={{ uri: item.uri }} />
         )
     }
@@ -47,23 +79,18 @@ const AddProduct = () => {
         <SafeAreaView style={styles.container}>
             <Image style={styles.bgImg} source={require('../../assets/images/backgroundImage2.jpg')} />
             <TouchableOpacity
-                onPress={selectImage}
+                onPress={selectImages}
                 style={styles.addImageButton}
             >
                 <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
                 <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Chọn ảnh</Text>
             </TouchableOpacity>
             <View style={{ height: 200 }}>
-                {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <Image style={styles.img} source={require('../../assets/images/Item.png')} />
-                    <Image style={styles.img} source={require('../../assets/images/Item.png')} />
-                    <Image style={styles.img} source={require('../../assets/images/Item.png')} />
-                    <Image style={styles.img} source={require('../../assets/images/Item.png')} />
-                </ScrollView> */}
                 <FlatList
                     data={images}
                     renderItem={renderItem}
                     horizontal={true}
+                    showsHorizontalScrollIndicator={false}
                 />
             </View>
             <Text style={styles.title}>Chọn loại, size và màu sản phẩm</Text>
@@ -110,7 +137,10 @@ const AddProduct = () => {
                 style={styles.input}
                 numberOfLines={2}
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                onPress={uploadImages}
+                style={styles.button}
+            >
                 <Text style={styles.buttonText}>Thêm sản phẩm</Text>
             </TouchableOpacity>
         </SafeAreaView>

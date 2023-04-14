@@ -39,13 +39,16 @@ export const ProductContextProvider = (props) => {
     }
 
     const onUpload = async image => {
+
         try {
             const res = await upload(image)
+            console.log('res onUpload', res)
             if (res.status == 'success') {
+                console.log('onUpload success ==> ', res.data)
                 return res.data
             }
         } catch (error) {
-            console.log('onUpload error: ' + error)
+            console.log('onUpload error: ' + error.toString())
             throw error
         }
         return null
@@ -57,7 +60,8 @@ export const ProductContextProvider = (props) => {
                 onGetStore,
                 isLoading,
                 setIsLoading,
-                onGetAllGenres
+                onGetAllGenres,
+                onUpload
             }}
         >
             {children}
