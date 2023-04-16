@@ -11,8 +11,8 @@ import { Notifier, NotifierComponents } from 'react-native-notifier';
 
 const Login = props => {
   const { navigation } = props;
-  const [username, setUsername] = useState('0918865377')
-  const [password, setPassword] = useState('hunglong0209')
+  const [username, setUsername] = useState('0865658544')
+  const [password, setPassword] = useState('456')
   const { onLogin, loginMsg } = useContext(UserContext)
 
   const loginFailDialog = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Loading, Notifications, AddProduct, Awaiting, Canceled } from '../screens';
 import { ROUTES } from '../constants';
@@ -13,6 +13,7 @@ const Tab = createBottomTabNavigator();
 const topTab = createMaterialTopTabNavigator()
 
 const appStack = createStackNavigator()
+
 
 const AppStackScreen = () => {
   return (

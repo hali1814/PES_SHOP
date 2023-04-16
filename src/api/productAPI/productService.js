@@ -6,15 +6,20 @@ export const getStore = async () => {
 }
 
 export const getALlGenres = async () => {
-    const res = await customAxios().get('/api/genres/all')
+    const res = await customAxios().get('/api/pes_store/genres/all')
     return res
 }
 
 export const upload = async data => {
-    console.log('dataaa', data)
     const result = await customAxios('multipart/form-data').post(
         '/api/upLoadMany',
         data,
     );
     return result;
 };
+
+export const addProduct = async (type, name, images, stock, sale, description) => {
+    const data = { type: type, name: name, images: images, stock: stock, sale: sale, description: description }
+    const result = await customAxios().post('/api/pes_store/product/add', data)
+    return result;
+}
