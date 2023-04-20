@@ -7,7 +7,7 @@ import OTPScreen from './auth/OTPScreen';
 import AddProduct from './home/AddProduct';
 import Canceled from './order-status/Canceled';
 import Awaiting from './order-status/Awaiting';
-
+import Detail from './home/Detail';
 
 export {
     Login,
@@ -18,5 +18,6 @@ export {
     OTPScreen,
     AddProduct,
     Canceled,
-    Awaiting
+    Awaiting,
+    Detail
 };

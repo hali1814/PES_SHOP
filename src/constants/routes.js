@@ -12,4 +12,5 @@ export default {
   AWAITING: 'AWAITING',
   CANCELED: 'CANCELED',
   ORDER_TAB: 'ORDER_TAB',
+  DETAILS: 'DETAILS',
 };

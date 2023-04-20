@@ -2,7 +2,8 @@ import {
     getStore,
     getALlGenres,
     upload,
-    addProduct
+    addProduct,
+    getProductDetail
 } from "./productService";
 
 import React, { createContext, useState, useEffect } from "react";
@@ -13,6 +14,8 @@ export const ProductContextProvider = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [genreLoading, setGenreLoading] = useState(false)
     const [genres, setGenres] = useState([])
+    const [detail, setDetail] = useState([])
+    const [detailLoading, setDetailLoading] = useState(false)
     const [imageUpload, setImageUpload] = useState([])
 
     useEffect(() => {
@@ -80,6 +83,22 @@ export const ProductContextProvider = (props) => {
         }
     }
 
+    const onGetProductDetail = async _id => {
+        setDetailLoading(true)
+        try {
+            const res = await getProductDetail(_id)
+            if (res.status === 'success') {
+                setDetailLoading(false)
+                setDetail(res.data)
+                // console.log('dataaa', detail)
+                return res.data
+            } return false
+        } catch (error) {
+            console.log('onGetProductDetail error: ' + error.toString())
+            throw error.toString()
+        }
+
+    }
     return (
         <ProductContext.Provider
             value={{
@@ -93,7 +112,12 @@ export const ProductContextProvider = (props) => {
                 genres,
                 onAddProduct,
                 imageUpload,
-                setImageUpload
+                setImageUpload,
+                onGetProductDetail,
+                setDetailLoading,
+                detailLoading,
+                detail,
+                setDetail
             }}
         >
             {children}

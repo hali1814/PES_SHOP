@@ -16,6 +16,7 @@ import { Colors } from '../../constants/colors';
 import { icons, images } from '../../assets';
 import { formatPrice } from '../../utils/MoneyFormat';
 import { ProductContext } from '../../api/productAPI/productContext';
+import { ROUTES } from '../../constants';
 
 const DATA = [
   {
@@ -94,8 +95,7 @@ const DATA = [
 
 const numColumns = 2;
 
-const Home = () => {
-
+const Home = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [nameShop, setNameShop] = useState('')
   const [avatar, setAvatar] = useState('')
@@ -119,7 +119,9 @@ const Home = () => {
 
   // RenderItems FlatList
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.ContainerFlatList}>
+    <TouchableOpacity
+      onPress={() => { navigation.navigate(ROUTES.DETAILS, { _id: item._id }) }}
+      style={styles.ContainerFlatList}>
       <View style={styles.CustomImgItem}>
         {
           isLoading
