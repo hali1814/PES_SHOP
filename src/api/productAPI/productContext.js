@@ -3,7 +3,8 @@ import {
     getALlGenres,
     upload,
     addProduct,
-    getProductDetail
+    getProductDetail,
+    addStock
 } from "./productService";
 
 import React, { createContext, useState, useEffect } from "react";
@@ -89,15 +90,26 @@ export const ProductContextProvider = (props) => {
             const res = await getProductDetail(_id)
             if (res.status === 'success') {
                 setDetailLoading(false)
-                setDetail(res.data)
-                // console.log('dataaa', detail)
                 return res.data
-            } return false
+            }
         } catch (error) {
             console.log('onGetProductDetail error: ' + error.toString())
             throw error.toString()
         }
 
+    }
+
+    const onAddStock = async (idProduct, size, color, stock, price) => {
+        try {
+            const res = await addStock(idProduct, size, color, stock, price)
+            if (res.status === 'success') {
+                console.log(res.data)
+                return true
+            } return false
+        } catch (error) {
+            console.log('onAddStock error', error.toString())
+            throw error.toString()
+        }
     }
     return (
         <ProductContext.Provider
@@ -117,7 +129,8 @@ export const ProductContextProvider = (props) => {
                 setDetailLoading,
                 detailLoading,
                 detail,
-                setDetail
+                setDetail,
+                onAddStock
             }}
         >
             {children}

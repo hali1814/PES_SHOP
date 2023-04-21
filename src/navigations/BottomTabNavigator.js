@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, Detail, AddProduct, Awaiting, Canceled } from '../screens';
+import { Home, Detail, AddProduct, Awaiting, Canceled, AddStock } from '../screens';
 import { ROUTES } from '../constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../constants/colors';
@@ -28,6 +28,7 @@ const AppStackScreen = () => {
       <appStack.Screen name={ROUTES.LOADING} component={AppLoading} />
       <appStack.Screen name={ROUTES.HOME} component={BottomTabNavigator} />
       <appStack.Screen name={ROUTES.DETAILS} component={Detail} />
+      <appStack.Screen name={ROUTES.ADD_STOCK} component={AddStock} />
     </appStack.Navigator>
   );
 };

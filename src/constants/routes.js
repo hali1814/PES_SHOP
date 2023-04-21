@@ -13,4 +13,5 @@ export default {
   CANCELED: 'CANCELED',
   ORDER_TAB: 'ORDER_TAB',
   DETAILS: 'DETAILS',
+  ADD_STOCK: 'ADD_STOCK',
 };

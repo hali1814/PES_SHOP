@@ -8,6 +8,7 @@ import AddProduct from './home/AddProduct';
 import Canceled from './order-status/Canceled';
 import Awaiting from './order-status/Awaiting';
 import Detail from './home/Detail';
+import AddStock from './home/AddStock';
 
 export {
     Login,
@@ -19,5 +20,6 @@ export {
     AddProduct,
     Canceled,
     Awaiting,
-    Detail
+    Detail,
+    AddStock
 };
