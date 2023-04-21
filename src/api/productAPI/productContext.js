@@ -4,7 +4,8 @@ import {
     upload,
     addProduct,
     getProductDetail,
-    addStock
+    addStock,
+    getBill
 } from "./productService";
 
 import React, { createContext, useState, useEffect } from "react";
@@ -111,6 +112,21 @@ export const ProductContextProvider = (props) => {
             throw error.toString()
         }
     }
+
+    const onGetBill = async (status) => {
+        try {
+            const res = await getBill(status)
+            if (res.status == 'success') {
+                return res.data
+            } else {
+                console.log('lỗi')
+            }
+        } catch (error) {
+            console.log('onGetBill error', error.toString())
+            throw error.toString()
+        }
+
+    }
     return (
         <ProductContext.Provider
             value={{
@@ -130,7 +146,8 @@ export const ProductContextProvider = (props) => {
                 detailLoading,
                 detail,
                 setDetail,
-                onAddStock
+                onAddStock,
+                onGetBill
             }}
         >
             {children}

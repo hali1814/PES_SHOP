@@ -6,7 +6,7 @@ import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
 
 
-const Canceled = () => {
+const Delivered = () => {
     const data = [
         {
             id: 1,
@@ -25,7 +25,7 @@ const Canceled = () => {
     const [bill, setBill] = useState([])
     const getBill = async () => {
         try {
-            const res = await onGetBill(4)
+            const res = await onGetBill(3)
             setBill(res)
         } catch (error) {
             console.log('getBill error', error.toString())
@@ -50,7 +50,7 @@ const Canceled = () => {
                         <Text>Tổng thanh toán</Text>
                         <Text style={styles.price}>{formatPrice(item.amount)}</Text>
                     </View>
-                    <Text style={styles.reasonText}>{item.information[1].msg}</Text>
+                    <Text style={styles.reasonText}>{'Đơn hàng đã giao'}</Text>
                 </View>
             </View>
         )
@@ -67,7 +67,7 @@ const Canceled = () => {
     )
 }
 
-export default Canceled
+export default Delivered
 
 const styles = StyleSheet.create({
     reasonText: {

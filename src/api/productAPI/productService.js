@@ -34,3 +34,8 @@ export const addStock = async (idProduct, size, color, stock, price) => {
     const res = await customAxios().post('/api/pes_store/product/stock/add', data)
     return res
 }
+
+export const getBill = async (status) => {
+    const res = await customAxios().get(`/api/pes_store/bills/${status}`)
+    return res
+}

@@ -7,6 +7,9 @@ import { Colors } from '../constants/colors';
 import { createStackNavigator } from '@react-navigation/stack';
 import AppLoading from '../screens/Loading/AppLoading';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import AwaitingPickup from '../screens/order-status/AwaitingPickup';
+import Shipping from '../screens/order-status/Shipping';
+import Delivered from '../screens/order-status/Delivered';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +50,21 @@ const OrderTab = () => {
         name={ROUTES.AWAITING}
         component={Awaiting}
         options={{ title: 'Chờ xác nhận' }}
+      />
+      <topTab.Screen
+        name={ROUTES.AWAITINGPICKUUP}
+        component={AwaitingPickup}
+        options={{ title: 'Chờ lấy hàng' }}
+      />
+      <topTab.Screen
+        name={ROUTES.SHIPPING}
+        component={Shipping}
+        options={{ title: 'Đang giao' }}
+      />
+      <topTab.Screen
+        name={ROUTES.DELIVERED}
+        component={Delivered}
+        options={{ title: 'Đã giao' }}
       />
       <topTab.Screen
         name={ROUTES.CANCELED}

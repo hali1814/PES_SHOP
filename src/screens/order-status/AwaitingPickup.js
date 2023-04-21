@@ -6,7 +6,7 @@ import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
 
 
-const Canceled = () => {
+const AwatingPickup = () => {
     const data = [
         {
             id: 1,
@@ -25,7 +25,7 @@ const Canceled = () => {
     const [bill, setBill] = useState([])
     const getBill = async () => {
         try {
-            const res = await onGetBill(4)
+            const res = await onGetBill(1)
             setBill(res)
         } catch (error) {
             console.log('getBill error', error.toString())
@@ -67,13 +67,13 @@ const Canceled = () => {
     )
 }
 
-export default Canceled
+export default AwatingPickup
 
 const styles = StyleSheet.create({
     reasonText: {
         marginTop: 5,
         marginLeft: 10,
-        color: 'red'
+        color: Colors.MAIN
     },
     cancelButton: {
         padding: 10,
