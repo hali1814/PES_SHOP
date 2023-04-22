@@ -1,27 +1,36 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { Colors } from '../../constants/colors'
 import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { Notifier, NotifierComponents } from 'react-native-notifier';
+import { ROUTES } from '../../constants'
 
 
 const AwatingPickup = () => {
-    const data = [
-        {
-            id: 1,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-        {
-            id: 2,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-    ]
-    const { onGetBill } = useContext(ProductContext)
+    const changeStatusSuccessDialog = () => {
+        Notifier.showNotification({
+            title: 'Chuyển trang thái thành công',
+            Component: NotifierComponents.Alert,
+            componentProps: {
+                alertType: 'success',
+            },
+        });
+    }
+    const changeStatusFailDialog = () => {
+        Notifier.showNotification({
+            title: 'Chuyển trang thái thất bại',
+            description: loginMsg,
+            Component: NotifierComponents.Alert,
+            componentProps: {
+                alertType: 'error',
+            },
+        });
+    }
+    const navigation = useNavigation()
+    const { onGetBill, onToShipToReceive } = useContext(ProductContext)
     const [bill, setBill] = useState([])
     const getBill = async () => {
         try {
@@ -32,11 +41,37 @@ const AwatingPickup = () => {
             throw error.toString()
         }
     }
+    useFocusEffect(
+        useCallback(() => {
+            getBill();
+        }, [onGetBill])
+    );
+
     useEffect(() => {
-        getBill()
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getBill();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const renderItem = ({ item }) => {
+        const toShipToReceive = async () => {
+            try {
+                const idBill = item._id
+                const idCustomer = item.customer
+                const res = await onToShipToReceive(idBill, idCustomer)
+                if (res == true) {
+                    changeStatusSuccessDialog()
+                    navigation.navigate(ROUTES.SHIPPING)
+                } else {
+                    changeStatusFailDialog()
+                }
+            } catch (error) {
+                console.log('onToShipToReceive error', error.toString())
+                throw error.toString()
+            }
+        }
         return (
             <View style={styles.billContainer}>
                 <Image
@@ -51,6 +86,17 @@ const AwatingPickup = () => {
                         <Text style={styles.price}>{formatPrice(item.amount)}</Text>
                     </View>
                     <Text style={styles.reasonText}>{item.information[1].msg}</Text>
+                    <View style={{
+                        alignItems: 'flex-end',
+                        marginTop: 10,
+                    }}>
+                        <TouchableOpacity
+                            onPress={toShipToReceive}
+                            style={styles.button}
+                        >
+                            <Text style={styles.buttonText}>Giao hàng</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )
@@ -70,6 +116,18 @@ const AwatingPickup = () => {
 export default AwatingPickup
 
 const styles = StyleSheet.create({
+    buttonText: {
+        color: Colors.WHITE,
+        fontWeight: '500'
+    },
+    button: {
+        padding: 10,
+        backgroundColor: Colors.MAIN,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
     reasonText: {
         marginTop: 5,
         marginLeft: 10,

@@ -5,7 +5,11 @@ import {
     addProduct,
     getProductDetail,
     addStock,
-    getBill
+    getBill,
+    toPayToShip,
+    toShipToReceive,
+    toReceiveToCompleted,
+    cancelBill
 } from "./productService";
 
 import React, { createContext, useState, useEffect } from "react";
@@ -127,6 +131,62 @@ export const ProductContextProvider = (props) => {
         }
 
     }
+
+    const onToPayToShip = async (idBill, idCustomer) => {
+        try {
+            const res = await toPayToShip(idBill, idCustomer)
+            if (res.status == 'success') {
+                console.log(res.data)
+                return true
+            } return false
+
+        } catch (error) {
+            console.log('onToPayToShip error', error.toString())
+            throw error.toString()
+        }
+    }
+
+    const onToShipToReceive = async (idBill, idCustomer) => {
+        try {
+            const res = await toShipToReceive(idBill, idCustomer)
+            if (res.status == 'success') {
+                console.log(res.data)
+                return true
+            } return false
+
+        } catch (error) {
+            console.log('onToShipToReceive error', error.toString())
+            throw error.toString()
+        }
+    }
+
+    const onToReceiveToCompleted = async (idBill, idCustomer) => {
+        try {
+            const res = await toReceiveToCompleted(idBill, idCustomer)
+            if (res.status == 'success') {
+                console.log(res.data)
+                return true
+            } return false
+
+        } catch (error) {
+            console.log('onToReceiveToCompleted error', error.toString())
+            throw error.toString()
+        }
+    }
+
+    const onCancelBill = async (idBill, idCustomer, reason) => {
+        try {
+            const res = await cancelBill(idBill, idCustomer, reason)
+            if (res.status == 'success') {
+                console.log(res.data)
+                return true
+            } return false
+
+        } catch (error) {
+            console.log('onCancelBill error', error.toString())
+            throw error.toString()
+        }
+    }
     return (
         <ProductContext.Provider
             value={{
@@ -147,7 +207,11 @@ export const ProductContextProvider = (props) => {
                 detail,
                 setDetail,
                 onAddStock,
-                onGetBill
+                onGetBill,
+                onToPayToShip,
+                onToShipToReceive,
+                onToReceiveToCompleted,
+                onCancelBill
             }}
         >
             {children}

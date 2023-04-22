@@ -1,27 +1,37 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { Colors } from '../../constants/colors'
 import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
+import { Notifier, NotifierComponents } from 'react-native-notifier';
+import { ROUTES } from '../../constants'
+
 
 
 const Shipping = () => {
-    const data = [
-        {
-            id: 1,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-        {
-            id: 2,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-    ]
-    const { onGetBill } = useContext(ProductContext)
+    const changeStatusSuccessDialog = () => {
+        Notifier.showNotification({
+            title: 'Chuyển trang thái thành công',
+            Component: NotifierComponents.Alert,
+            componentProps: {
+                alertType: 'success',
+            },
+        });
+    }
+    const changeStatusFailDialog = () => {
+        Notifier.showNotification({
+            title: 'Chuyển trang thái thất bại',
+            description: loginMsg,
+            Component: NotifierComponents.Alert,
+            componentProps: {
+                alertType: 'error',
+            },
+        });
+    }
+    const navigation = useNavigation()
+    const { onGetBill, onToReceiveToCompleted } = useContext(ProductContext)
     const [bill, setBill] = useState([])
     const getBill = async () => {
         try {
@@ -32,11 +42,37 @@ const Shipping = () => {
             throw error.toString()
         }
     }
+    useFocusEffect(
+        useCallback(() => {
+            getBill();
+        }, [onGetBill])
+    );
+
     useEffect(() => {
-        getBill()
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getBill();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const renderItem = ({ item }) => {
+        const toReceiveToCompleted = async () => {
+            try {
+                const idBill = item._id
+                const idCustomer = item.customer
+                const res = await onToReceiveToCompleted(idBill, idCustomer)
+                if (res == true) {
+                    changeStatusSuccessDialog()
+                    navigation.navigate(ROUTES.DELIVERED)
+                } else {
+                    changeStatusFailDialog()
+                }
+            } catch (error) {
+                console.log('onToReceiveToCompleted error', error.toString())
+                throw error.toString()
+            }
+        }
         return (
             <View style={styles.billContainer}>
                 <Image
@@ -50,7 +86,15 @@ const Shipping = () => {
                         <Text>Tổng thanh toán</Text>
                         <Text style={styles.price}>{formatPrice(item.amount)}</Text>
                     </View>
-                    <Text style={styles.reasonText}>{item.information[1].msg}</Text>
+                    <Text style={styles.reasonText}>{'Đơn hàng đang được giao'}</Text>
+                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+                        <TouchableOpacity
+                            onPress={toReceiveToCompleted}
+                            style={styles.button}
+                        >
+                            <Text style={styles.buttonText}>Hoàn tất</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )
@@ -70,10 +114,22 @@ const Shipping = () => {
 export default Shipping
 
 const styles = StyleSheet.create({
+    buttonText: {
+        color: Colors.WHITE,
+        fontWeight: '500'
+    },
+    button: {
+        padding: 10,
+        backgroundColor: Colors.MAIN,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+    },
     reasonText: {
         marginTop: 5,
         marginLeft: 10,
-        color: 'red'
+        color: Colors.MAIN
     },
     cancelButton: {
         padding: 10,

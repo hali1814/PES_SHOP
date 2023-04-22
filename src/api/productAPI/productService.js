@@ -39,3 +39,27 @@ export const getBill = async (status) => {
     const res = await customAxios().get(`/api/pes_store/bills/${status}`)
     return res
 }
+
+export const toPayToShip = async (idBill, idCustomer) => {
+    const data = { idBill: idBill, idCustomer: idCustomer }
+    const res = await customAxios().post('/api/pes_store/bill/status/topPayToShip', data)
+    return res
+}
+
+export const toShipToReceive = async (idBill, idCustomer) => {
+    const data = { idBill: idBill, idCustomer: idCustomer }
+    const res = await customAxios().post('/api/pes_store/bill/status/toShipToReceive', data)
+    return res
+}
+
+export const toReceiveToCompleted = async (idBill, idCustomer) => {
+    const data = { idBill: idBill, idCustomer: idCustomer }
+    const res = await customAxios().post('/api/pes_store/bill/status/toReceiveToCompleted', data)
+    return res
+}
+
+export const cancelBill = async (idBill, idCustomer, reason) => {
+    const data = { idBill: idBill, idCustomer: idCustomer, reason: reason }
+    const res = await customAxios().post('/api/pes_store/bill/status/cancel', data)
+    return res
+}

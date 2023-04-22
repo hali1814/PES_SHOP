@@ -1,26 +1,14 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { Colors } from '../../constants/colors'
 import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 
 
 const Canceled = () => {
-    const data = [
-        {
-            id: 1,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-        {
-            id: 2,
-            image: require('../../assets/images/Item.png'),
-            name: 'Giày MLB Bigball Chunky',
-            price: 799000
-        },
-    ]
+    const navigation = useNavigation()
     const { onGetBill } = useContext(ProductContext)
     const [bill, setBill] = useState([])
     const getBill = async () => {
@@ -32,9 +20,19 @@ const Canceled = () => {
             throw error.toString()
         }
     }
+    useFocusEffect(
+        useCallback(() => {
+            getBill();
+        }, [onGetBill])
+    );
+
     useEffect(() => {
-        getBill()
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getBill();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const renderItem = ({ item }) => {
         return (
