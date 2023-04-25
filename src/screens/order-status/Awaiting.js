@@ -60,7 +60,8 @@ const Awaiting = () => {
     const [cancelReason, setCancelReason] = useState('');
     const [errorReason, setErrorReason] = useState('')
     const isValidationOK = () => cancelReason.length > 0 && isValidReason(cancelReason) == true
-
+    const [id, setId] = useState('')
+    const [customer, setCustomer] = useState('')
 
 
 
@@ -69,10 +70,10 @@ const Awaiting = () => {
         const showModal = () => {
             setModalVisible(true);
         };
-        const onCancelPress = () => {
-            const idBill = item._id
-            const idCustomer = item.customer
-            console.log(idBill, idCustomer)
+        const onCancelPress = (idBill, idCustomer) => {
+            setId(idBill)
+            setCustomer(idCustomer)
+            console.log('id,idCustomer', id, customer)
             showModal();
         };
 
@@ -94,12 +95,12 @@ const Awaiting = () => {
         }
 
         const cancelBill = async () => {
-            console.log('cancelBill', idBill, idCustomer, cancelReason)
+            console.log('cancelBill', id, customer, cancelReason)
             try {
-                console.log(idBill, idCustomer, cancelReason)
-                const res = await cancelBill(idBill, idCustomer, cancelReason)
+                const res = await onCancelBill(id, customer, cancelReason)
                 if (res == true) {
                     changeStatusSuccessDialog()
+                    setModalVisible(false)
                     navigation.navigate(ROUTES.CANCELED)
                 } else {
                     changeStatusFailDialog()
@@ -132,7 +133,7 @@ const Awaiting = () => {
                             <Text style={styles.buttonText}>Xác nhận</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={onCancelPress}
+                            onPress={() => { onCancelPress(item._id, item.customer) }}
                             style={styles.cancelButton}
                         >
                             <Text style={styles.buttonText}>Huỷ</Text>
