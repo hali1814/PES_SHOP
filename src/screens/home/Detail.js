@@ -30,11 +30,12 @@ const Detail = ({ navigation, route }) => {
     ]
 
     const renderItem = ({ item, index }) => {
+        console.log('images', item)
         return (
             <Image
                 key={index}
-                source={{ uri: item }}
-                style={{ height: 350, width: '100%' }}
+                source={item ? { uri: item } : require('../../assets/images/Item.png')}
+                // style={{ height: 350, width: '100%' }}
                 resizeMode='cover'
             />
         )
@@ -74,6 +75,11 @@ const Detail = ({ navigation, route }) => {
     useEffect(() => {
         getDetail()
     }, [])
+
+    // useEffect(() => {
+    //     console.log('images loaded', images)
+    // }, [images])
+
     return (
         <View style={{ flex: 1 }}>
             {
@@ -96,7 +102,8 @@ const Detail = ({ navigation, route }) => {
                                     data={images}
                                     renderItem={renderItem}
                                     horizontal={true}
-                                // showsHorizontalScrollIndicator={false}
+                                    // showsHorizontalScrollIndicator={false}
+                                    style={{ height: 350, width: '100%' }}
                                 />
                             </View>
                             <View style={styles.nameBox}>
@@ -241,7 +248,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: Colors.BLACK
+        color: Colors.BLACK,
+        textTransform: 'capitalize'
     },
     priceContainer: {
         flexDirection: 'row',

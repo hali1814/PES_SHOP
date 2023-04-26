@@ -51,7 +51,6 @@ export const ProductContextProvider = (props) => {
             if (res.status == 'success') {
                 setGenreLoading(false)
                 setGenres(res.data.map(genre => ({ id: genre._id, label: genre.label })))
-                console.log('context genres', genres)
                 return genres
             } return false
         } catch (error) {
@@ -187,6 +186,7 @@ export const ProductContextProvider = (props) => {
             throw error.toString()
         }
     }
+
     return (
         <ProductContext.Provider
             value={{

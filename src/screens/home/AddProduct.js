@@ -16,6 +16,7 @@ const AddProduct = () => {
         try {
             const res = await onGetAllGenres()
             console.log(res)
+            setTypes(res)
         } catch (error) {
             console.log('getAllGenres error: ' + error)
             throw error.toString()
@@ -29,16 +30,15 @@ const AddProduct = () => {
             onUpload()
     }, [])
 
-    const sizes = ['s', 'l', 'xl']
-    const colors = ['trắng', 'đen', 'tím']
+    const [types, setTypes] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedSize, setSelectedSize] = useState(sizes[0])
-    const [selectedColor, setSelectedColor] = useState(colors[0])
+    const [selectedSize, setSelectedSize] = useState('')
+    const [selectedColor, setSelectedColor] = useState('')
     const [imageLoading, setImageLoading] = useState(false)
     const [images, setImages] = useState([])
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
-    const [price, setPrice] = useState(200000)
+    const [price, setPrice] = useState()
     const [status, setStatus] = useState(0)
     const [stock, setStock] = useState({})
     useEffect(() => {
@@ -124,101 +124,103 @@ const AddProduct = () => {
         }
     }
 
-    console.log('name, description', productName, description)
-
     const renderItem = ({ item }) => {
         return (
             <Image style={styles.img} source={{ uri: item.uri }} />
         )
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             <Image style={styles.bgImg} source={require('../../assets/images/backgroundImage2.jpg')} />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                    onPress={selectImages}
-                    style={styles.addImageButton}
-                >
-                    <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
-                    <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Chọn ảnh</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={uploadImages}
-                    style={styles.addImageButton}
-                >
-                    <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
-                    <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Up ảnh</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{ height: 200 }}>
-                <FlatList
-                    data={images}
-                    renderItem={renderItem}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
+            <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TouchableOpacity
+                        onPress={selectImages}
+                        style={styles.addImageButton}
+                    >
+                        <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
+                        <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Chọn ảnh</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={uploadImages}
+                        style={styles.addImageButton}
+                    >
+                        <Ionicon name='image-outline' size={30} color={Colors.WHITE} />
+                        <Text style={{ fontSize: 15, color: Colors.WHITE, fontWeight: '500' }}>Up ảnh</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ height: 200 }}>
+                    <FlatList
+                        data={images}
+                        renderItem={renderItem}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </View>
+                <Text style={styles.title}>Chọn loại, size và màu sản phẩm</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    {
+                        genreLoading
+                            ? (<ActivityIndicator size='large' color={Colors.MAIN} />)
+                            : (
+                                <Picker
+                                    selectedValue={selectedCategory}
+                                    onValueChange={(itemValue, itemIndex) => setSelectedCategory(itemValue)}
+                                    style={styles.picker}
+                                >
+                                    <Picker.Item label='loại sản phẩm' enabled={false} />
+                                    {genres.map((genre, index) => (
+                                        <Picker.Item key={index} label={genre.label} value={genre.id} />
+                                    ))}
+                                </Picker>
+                            )
+                    }
+                </View>
+                <Text style={styles.title}>Màu sản phẩm : </Text>
+                <TextInput
+                    value={selectedColor}
+                    onChangeText={(text) => setSelectedColor(text)}
+                    placeholder='đen, trắng, xanh'
+                    style={styles.input}
+                />
+                <Text style={styles.title}>Size sản phẩm : </Text>
+                <TextInput
+                    value={selectedSize}
+                    onChangeText={(text) => setSelectedSize(text)}
+                    placeholder='S,M,L,XL'
+                    style={styles.input}
+                />
+                <Text style={styles.title}>Tên sản phẩm : </Text>
+                <TextInput
+                    value={productName}
+                    onChangeText={(text) => setProductName(text)}
+                    placeholder='Nhập tên cho sản phẩm'
+                    style={styles.input}
+                />
+                <Text style={styles.title}>Mô tả : </Text>
+                <TextInput
+                    value={description}
+                    onChangeText={(text) => setDescription(text)}
+                    placeholder='Nhập mô tả cho sản phẩm'
+                    style={styles.input}
+                    numberOfLines={2}
+                />
+                <Text style={styles.title}>Nhập giá : </Text>
+                <TextInput
+                    value={price}
+                    onChangeText={(text) => setPrice(text)}
+                    placeholder='100.000đ'
+                    style={styles.input}
+                    numberOfLines={2}
                 />
             </View>
-            <Text style={styles.title}>Chọn loại, size và màu sản phẩm</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                {
-                    genreLoading
-                        ? (<ActivityIndicator size='large' color={Colors.MAIN} />)
-                        : (
-                            <Picker
-                                selectedValue={selectedCategory}
-                                onValueChange={(itemValue, itemIndex) => setSelectedCategory(itemValue)}
-                                style={styles.picker}
-                            >
-                                <Picker.Item label='loại sản phẩm' enabled={false} />
-                                {genres.map((genre, index) => (
-                                    <Picker.Item key={index} label={genre.label} value={genre.id} />
-                                ))}
-                            </Picker>
-                        )
-                }
-                <Picker
-                    selectedValue={selectedSize}
-                    onValueChange={(itemValue, itemIndex) => setSelectedCategory(itemValue)}
-                    style={styles.picker}
-                >
-                    <Picker.Item label='size' enabled={false} />
-                    {sizes.map((size, index) => (
-                        <Picker.Item key={index} label={size} value={size} />
-                    ))}
-                </Picker>
-                <Picker
-                    selectedValue={selectedColor}
-                    onValueChange={(itemValue, itemIndex) => setSelectedColor(itemValue)}
-                    style={styles.picker}
-                >
-                    <Picker.Item label='màu sắc' enabled={false} />
-                    {colors.map((color, index) => (
-                        <Picker.Item key={index} label={color} value={color} />
-                    ))}
-                </Picker>
-            </View>
-            <Text style={styles.title}>Tên sản phẩm : </Text>
-            <TextInput
-                value={productName}
-                onChangeText={(text) => setProductName(text)}
-                placeholder='Áo đẹp chưa kìa'
-                style={styles.input}
-            />
-            <Text style={styles.title}>Mô tả : </Text>
-            <TextInput
-                value={description}
-                onChangeText={(text) => setDescription(text)}
-                placeholder='Áo này thật là đẹp bao la như nắng chiều ban mai sớm'
-                style={styles.input}
-                numberOfLines={2}
-            />
             <TouchableOpacity
                 onPress={addProduct}
                 style={styles.button}
             >
                 <Text style={styles.buttonText}>Thêm sản phẩm</Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </ScrollView>
     )
 }
 
@@ -227,22 +229,16 @@ export default AddProduct
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 16,
         height: '100%',
     },
     button: {
         justifyContent: 'flex-end',
-        position: 'absolute',
-        bottom: 0,
         alignItems: 'center',
         paddingVertical: 7,
         backgroundColor: Colors.MAIN,
-        left: 0,
-        right: 0,
         marginHorizontal: 20,
-        borderTopLeftRadius: 7,
-        borderTopRightRadius: 7,
+        borderRadius: 7,
+        marginVertical: 10,
     },
     buttonText: {
         color: Colors.WHITE,
@@ -256,7 +252,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '40%',
         justifyContent: 'space-around',
-        marginBottom: 10
+        marginBottom: 10,
+        marginHorizontal: 16,
+        marginTop: 10,
     },
     imageContainer: {
         marginTop: 10,
@@ -271,18 +269,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         marginTop: 10,
         color: Colors.BLACK,
-        width: '30%'
+        width: '30%',
+        marginHorizontal: 16,
     },
     title: {
         marginTop: 10,
         color: Colors.BLACK,
         fontSize: 16,
-        fontWeight: '500'
+        fontWeight: '500',
+        marginHorizontal: 16,
     },
     input: {
         marginTop: 5,
         borderBottomWidth: 0.5,
-        borderBottomColor: 'gray'
+        borderBottomColor: 'gray',
+        marginHorizontal: 16,
     },
     bgImg: {
         position: 'absolute',

@@ -121,7 +121,7 @@ const Home = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => { navigation.navigate(ROUTES.DETAILS, { _id: item._id }) }}
-      style={styles.ContainerFlatList}>
+      style={[styles.ContainerFlatList, item.status == 1 ? { opacity: 0.5 } : {}]}>
       <View style={styles.CustomImgItem}>
         {
           isLoading
@@ -150,6 +150,20 @@ const Home = ({ navigation }) => {
         <Text numberOfLines={1} style={styles.price}>
           {formatPrice(item.stock[0].price)}
         </Text>
+        {
+          item.status == 1
+            ? (
+              <View
+                style={{
+                  padding: 5, backgroundColor: 'red', marginTop: 5,
+                  borderRadius: 4, justifyContent: 'center', alignItems: 'center'
+                }}
+              >
+                <Text style={{ fontSize: 12, color: Colors.WHITE, fontWeight: '500' }}>đang kiểm duyệt</Text>
+              </View>
+            )
+            : null
+        }
       </View>
     </TouchableOpacity>
   );
@@ -197,7 +211,7 @@ const Home = ({ navigation }) => {
         </View>
       </View>
       {/* FlatListView */}
-      <View style={{ paddingHorizontal: 12, marginTop: 12, height: '100%' }}>
+      <View style={{ paddingHorizontal: 12, marginTop: 12, flex: 1 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
           data={products}
