@@ -6,6 +6,7 @@ import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
 import { useNavigation } from '@react-navigation/native'
 import { Notifier, NotifierComponents } from 'react-native-notifier';
+import { ROUTES } from '../../constants'
 
 
 
@@ -29,7 +30,7 @@ const AddStock = ({ route }) => {
             },
         });
     }
-    const { name, prices, colors, sizes, id } = route.params
+    const { name, prices, colors, sizes, id, images } = route.params
     console.log(id)
     const { onAddStock, onGetProductDetail } = useContext(ProductContext)
     const [stockSize, setStockSize] = useState('')
@@ -43,16 +44,15 @@ const AddStock = ({ route }) => {
             if (res == true) {
                 addStockSuccess()
                 navigation.goBack()
-                onGetProductDetail(id)
+
             } else {
-                console.log('add stock failed roi do')
+                addStockFail()
             }
         } catch (error) {
             console.log('add stock failed', error)
             throw error.toString()
 
         }
-
     }
 
     return (
@@ -105,7 +105,7 @@ const AddStock = ({ route }) => {
                                     prices.map((price, i) => (
                                         <View key={i}>
                                             <TouchableOpacity>
-                                                <Text style={styles.priceText}>{formatPrice(price)}</Text>
+                                                <Text style={styles.priceText}>{formatPrice(parseInt(price))}</Text>
                                             </TouchableOpacity>
                                         </View>
                                     ))

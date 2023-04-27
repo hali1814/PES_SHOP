@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Dimensions, ScrollView, ActivityIndicator } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Colors } from '../../constants/colors'
 import { formatPrice } from '../../utils/MoneyFormat'
 import { ProductContext } from '../../api/productAPI/productContext'
 import Swiper from 'react-native-swiper'
 import { ROUTES } from '../../constants'
+import { useFocusEffect } from '@react-navigation/native'
 
-
+const width = Dimensions.get('screen').width
 
 
 
@@ -29,17 +30,7 @@ const Detail = ({ navigation, route }) => {
         },
     ]
 
-    const renderItem = ({ item, index }) => {
-        console.log('images', item)
-        return (
-            <Image
-                key={index}
-                source={item ? { uri: item } : require('../../assets/images/Item.png')}
-                // style={{ height: 350, width: '100%' }}
-                resizeMode='cover'
-            />
-        )
-    }
+
 
     const { onGetProductDetail, detail, detailLoading } = useContext(ProductContext)
     const [productDetail, setProductDetail] = useState([])
@@ -50,7 +41,9 @@ const Detail = ({ navigation, route }) => {
     const [sizes, setSizes] = useState([])
     const [location, setLocation] = useState('')
     const [brand, setBrand] = useState('')
+    const [key, setKey] = useState(0);
     const { _id } = route.params
+    console.log(_id)
     prices.sort((a, b) => a - b);
     const getDetail = async () => {
         try {
@@ -74,11 +67,23 @@ const Detail = ({ navigation, route }) => {
 
     useEffect(() => {
         getDetail()
-    }, [])
+    }, [key, navigation])
+    navigation.addListener('focus', () => {
+        // Mỗi khi màn hình được focus, tăng giá trị của key lên 1 để render lại
+        setKey(prevKey => prevKey + 1);
+    });
 
-    // useEffect(() => {
-    //     console.log('images loaded', images)
-    // }, [images])
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <Image
+                key={index}
+                source={item ? { uri: item } : require('../../assets/images/Item.png')}
+                style={{ height: 500, width: width }}
+                resizeMode='cover'
+            />
+        )
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -102,21 +107,21 @@ const Detail = ({ navigation, route }) => {
                                     data={images}
                                     renderItem={renderItem}
                                     horizontal={true}
-                                    // showsHorizontalScrollIndicator={false}
-                                    style={{ height: 350, width: '100%' }}
+                                    showsHorizontalScrollIndicator={false}
+                                    style={{ height: 400, width: '100%' }}
                                 />
                             </View>
                             <View style={styles.nameBox}>
                                 <Text style={styles.title}>{name}</Text>
                                 <View style={styles.priceContainer}>
-                                    <Text style={styles.checkText}>Giày authentic</Text>
+                                    <Text style={styles.checkText}>Hàng authentic</Text>
                                     <View style={{ flexDirection: 'row' }}>
                                         {
                                             prices.map((price, index) => (
                                                 <Text
                                                     style={{ marginLeft: 10, color: 'red', fontWeight: '500' }}
                                                     key={index}>
-                                                    {formatPrice(price)}
+                                                    {formatPrice(parseInt(price))}
                                                 </Text>
                                             ))
                                         }
@@ -129,7 +134,7 @@ const Detail = ({ navigation, route }) => {
                                     <TouchableOpacity
                                         onPress={() => {
                                             navigation.navigate(ROUTES.ADD_STOCK,
-                                                { name: name, prices: prices, colors: colors, sizes: sizes, id: _id })
+                                                { name: name, prices: prices, colors: colors, sizes: sizes, id: _id, images: images })
                                         }}
                                         style={styles.headerContainer}
                                     >
@@ -232,7 +237,7 @@ const styles = StyleSheet.create({
     nameBox: {
         marginHorizontal: 10,
         backgroundColor: Colors.WHITE,
-        marginTop: -10,
+        marginTop: -20,
         borderRadius: 5,
         shadowOffset: {
             width: 1,

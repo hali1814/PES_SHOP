@@ -11,7 +11,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Colors } from '../../constants/colors';
 import { icons, images } from '../../assets';
 import { formatPrice } from '../../utils/MoneyFormat';
@@ -101,11 +101,12 @@ const Home = ({ navigation }) => {
   const [avatar, setAvatar] = useState('')
   const [products, setProducts] = useState([])
   const [sold, setSold] = useState()
+  const [key, setKey] = useState(0);
 
   const { onGetStore, isLoading } = useContext(ProductContext)
   useEffect(() => {
     getStore()
-  }, [])
+  }, [key, navigation])
 
   const getStore = async () => {
     const res = await onGetStore()
@@ -116,9 +117,15 @@ const Home = ({ navigation }) => {
     setSold(res.sold)
   }
 
+  navigation.addListener('focus', () => {
+    // Mỗi khi màn hình được focus, tăng giá trị của key lên 1 để render lại
+    setKey(prevKey => prevKey + 1);
+  });
+
 
   // RenderItems FlatList
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) =>
+  (
     <TouchableOpacity
       onPress={() => { navigation.navigate(ROUTES.DETAILS, { _id: item._id }) }}
       style={[styles.ContainerFlatList, item.status == 1 ? { opacity: 0.5 } : {}]}>
@@ -148,7 +155,7 @@ const Home = ({ navigation }) => {
           {item.description}
         </Text>
         <Text numberOfLines={1} style={styles.price}>
-          {formatPrice(item.stock[0].price)}
+          {formatPrice(parseInt(item.stock[0].price))}
         </Text>
         {
           item.status == 1

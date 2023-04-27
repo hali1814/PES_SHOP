@@ -38,7 +38,7 @@ const AddProduct = () => {
     const [images, setImages] = useState([])
     const [productName, setProductName] = useState('')
     const [description, setDescription] = useState('')
-    const [price, setPrice] = useState()
+    const [price, setPrice] = useState(0)
     const [status, setStatus] = useState(0)
     const [stock, setStock] = useState({})
     useEffect(() => {
@@ -57,6 +57,16 @@ const AddProduct = () => {
     const upLoadSuccessDialog = () => {
         Notifier.showNotification({
             title: 'Up ảnh thành công',
+            Component: NotifierComponents.Alert,
+            componentProps: {
+                alertType: 'success',
+            },
+        });
+    }
+
+    const addProductSuccessDialog = () => {
+        Notifier.showNotification({
+            title: 'Đăng bán thành công',
             Component: NotifierComponents.Alert,
             componentProps: {
                 alertType: 'success',
@@ -115,6 +125,7 @@ const AddProduct = () => {
             const res = await onAddProduct(selectedCategory, productName, imageUpload, stock, 10, description)
             console.log('add product result : ', res)
             if (res == true) {
+                addProductSuccessDialog()
                 navigation.push(ROUTES.HOME)
                 onGetStore()
             }
@@ -157,7 +168,7 @@ const AddProduct = () => {
                         showsHorizontalScrollIndicator={false}
                     />
                 </View>
-                <Text style={styles.title}>Chọn loại, size và màu sản phẩm</Text>
+                <Text style={styles.title}>Chọn loại sản phẩm</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     {
                         genreLoading
@@ -211,6 +222,7 @@ const AddProduct = () => {
                     onChangeText={(text) => setPrice(text)}
                     placeholder='100.000đ'
                     style={styles.input}
+                    keyboardType='number-pad'
                     numberOfLines={2}
                 />
             </View>
@@ -269,7 +281,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         marginTop: 10,
         color: Colors.BLACK,
-        width: '30%',
+        width: '60%',
         marginHorizontal: 16,
     },
     title: {
